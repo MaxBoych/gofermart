@@ -1,9 +1,9 @@
 package balance_delivery
 
 import (
+	"github.com/MaxBoych/gofermart/internal/balance"
+	"github.com/MaxBoych/gofermart/pkg/middlewares"
 	"github.com/gofiber/fiber/v2"
-	"gofermart/internal/balance"
-	"gofermart/pkg/middlewares"
 )
 
 func MapBalanceRoutes(group fiber.Router, h balance.Handler, mw *middlewares.MiddlewareManager) {

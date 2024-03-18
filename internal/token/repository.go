@@ -2,7 +2,7 @@ package token
 
 import (
 	"context"
-	"gofermart/internal/token/token_models"
+	"github.com/MaxBoych/gofermart/internal/token/token_models"
 )
 
 type Repository interface {

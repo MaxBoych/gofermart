@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/MaxBoych/gofermart/internal/store/sql_queries"
+	"github.com/MaxBoych/gofermart/internal/token/token_models"
+	"github.com/MaxBoych/gofermart/pkg/logger"
 	trmpgx "github.com/avito-tech/go-transaction-manager/drivers/pgxv5/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
-	"gofermart/internal/store/sql_queries"
-	"gofermart/internal/token/token_models"
-	"gofermart/pkg/logger"
 	"time"
 )
 

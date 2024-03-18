@@ -1,11 +1,11 @@
 package user_delivery
 
 import (
+	"github.com/MaxBoych/gofermart/internal/user"
+	"github.com/MaxBoych/gofermart/internal/user/user_models"
+	"github.com/MaxBoych/gofermart/pkg/cookie"
+	"github.com/MaxBoych/gofermart/pkg/errs"
 	"github.com/gofiber/fiber/v2"
-	"gofermart/internal/user"
-	"gofermart/internal/user/user_models"
-	"gofermart/pkg/cookie"
-	"gofermart/pkg/errs"
 	"time"
 )
 

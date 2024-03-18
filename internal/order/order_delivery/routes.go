@@ -1,9 +1,9 @@
 package order_delivery
 
 import (
+	"github.com/MaxBoych/gofermart/internal/order"
+	"github.com/MaxBoych/gofermart/pkg/middlewares"
 	"github.com/gofiber/fiber/v2"
-	"gofermart/internal/order"
-	"gofermart/pkg/middlewares"
 )
 
 func MapOrderRoutes(group fiber.Router, h order.Handlers, mw *middlewares.MiddlewareManager) {

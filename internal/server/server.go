@@ -1,11 +1,11 @@
 package server
 
 import (
+	"github.com/MaxBoych/gofermart/internal/config"
+	"github.com/MaxBoych/gofermart/pkg/db"
+	"github.com/MaxBoych/gofermart/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
-	"gofermart/internal/config"
-	"gofermart/pkg/db"
-	"gofermart/pkg/logger"
 	"os"
 	"os/signal"
 	"syscall"

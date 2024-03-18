@@ -2,7 +2,7 @@ package balance
 
 import (
 	"context"
-	"gofermart/internal/balance/balance_models"
+	"github.com/MaxBoych/gofermart/internal/balance/balance_models"
 )
 
 type Repository interface {

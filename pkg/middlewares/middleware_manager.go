@@ -1,6 +1,6 @@
 package middlewares
 
-import "gofermart/internal/token"
+import "github.com/MaxBoych/gofermart/internal/token"
 
 type MiddlewareManager struct {
 	tokenRepo token.Repository

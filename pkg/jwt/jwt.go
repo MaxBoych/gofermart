@@ -4,9 +4,9 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
+	"github.com/MaxBoych/gofermart/pkg/logger"
 	"github.com/golang-jwt/jwt/v5"
 	"go.uber.org/zap"
-	"gofermart/pkg/logger"
 	"time"
 )
 

@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/MaxBoych/gofermart/internal/store/sql_queries"
+	"github.com/MaxBoych/gofermart/pkg/jwt"
+	"github.com/MaxBoych/gofermart/pkg/logger"
 	trmpgx "github.com/avito-tech/go-transaction-manager/drivers/pgxv5/v2"
 	"github.com/avito-tech/go-transaction-manager/trm/v2/manager"
 	"go.uber.org/zap"
-	"gofermart/internal/store/sql_queries"
-	"gofermart/pkg/jwt"
-	"gofermart/pkg/logger"
 )
 
 func (db *DB) Init(ctx context.Context) error {

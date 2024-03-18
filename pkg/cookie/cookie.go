@@ -1,9 +1,9 @@
 package cookie
 
 import (
+	"github.com/MaxBoych/gofermart/internal/user/user_models"
+	"github.com/MaxBoych/gofermart/pkg/errs"
 	"github.com/gofiber/fiber/v2"
-	"gofermart/internal/user/user_models"
-	"gofermart/pkg/errs"
 	"strings"
 )
 

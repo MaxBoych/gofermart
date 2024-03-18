@@ -2,7 +2,7 @@ package user
 
 import (
 	"context"
-	"gofermart/internal/user/user_models"
+	"github.com/MaxBoych/gofermart/internal/user/user_models"
 )
 
 type UseCase interface {

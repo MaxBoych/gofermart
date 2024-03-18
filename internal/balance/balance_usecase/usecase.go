@@ -2,11 +2,11 @@ package balance_usecase
 
 import (
 	"context"
+	"github.com/MaxBoych/gofermart/internal/balance"
+	"github.com/MaxBoych/gofermart/internal/balance/balance_models"
+	"github.com/MaxBoych/gofermart/pkg/errs"
+	"github.com/MaxBoych/gofermart/pkg/utils"
 	"github.com/avito-tech/go-transaction-manager/trm/v2/manager"
-	"gofermart/internal/balance"
-	"gofermart/internal/balance/balance_models"
-	"gofermart/pkg/errs"
-	"gofermart/pkg/utils"
 )
 
 type BalanceUC struct {

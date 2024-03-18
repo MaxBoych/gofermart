@@ -2,8 +2,8 @@ package order_delivery
 
 import (
 	"encoding/json"
+	"github.com/MaxBoych/gofermart/internal/order"
 	"github.com/gofiber/fiber/v2"
-	"gofermart/internal/order"
 	"net/http"
 )
 

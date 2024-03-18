@@ -1,19 +1,19 @@
 package server
 
 import (
+	"github.com/MaxBoych/gofermart/internal/balance/balance_delivery"
+	"github.com/MaxBoych/gofermart/internal/balance/balance_repository"
+	"github.com/MaxBoych/gofermart/internal/balance/balance_usecase"
+	"github.com/MaxBoych/gofermart/internal/order/order_delivery"
+	"github.com/MaxBoych/gofermart/internal/order/order_repository"
+	"github.com/MaxBoych/gofermart/internal/order/order_usecase"
+	"github.com/MaxBoych/gofermart/internal/token/token_repository"
+	"github.com/MaxBoych/gofermart/internal/user/user_delivery"
+	"github.com/MaxBoych/gofermart/internal/user/user_repository"
+	"github.com/MaxBoych/gofermart/internal/user/user_usecase"
+	"github.com/MaxBoych/gofermart/pkg/middlewares"
 	trmpgx "github.com/avito-tech/go-transaction-manager/drivers/pgxv5/v2"
 	"github.com/avito-tech/go-transaction-manager/trm/v2/manager"
-	"gofermart/internal/balance/balance_delivery"
-	"gofermart/internal/balance/balance_repository"
-	"gofermart/internal/balance/balance_usecase"
-	"gofermart/internal/order/order_delivery"
-	"gofermart/internal/order/order_repository"
-	"gofermart/internal/order/order_usecase"
-	"gofermart/internal/token/token_repository"
-	"gofermart/internal/user/user_delivery"
-	"gofermart/internal/user/user_repository"
-	"gofermart/internal/user/user_usecase"
-	"gofermart/pkg/middlewares"
 )
 
 func (s *Server) MapHandlers() {

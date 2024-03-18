@@ -2,10 +2,10 @@ package balance_delivery
 
 import (
 	"encoding/json"
+	"github.com/MaxBoych/gofermart/internal/balance"
+	"github.com/MaxBoych/gofermart/internal/balance/balance_models"
+	"github.com/MaxBoych/gofermart/pkg/errs"
 	"github.com/gofiber/fiber/v2"
-	"gofermart/internal/balance"
-	"gofermart/internal/balance/balance_models"
-	"gofermart/pkg/errs"
 )
 
 type BalanceHandler struct {

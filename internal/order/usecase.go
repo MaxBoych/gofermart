@@ -2,7 +2,7 @@ package order
 
 import (
 	"context"
-	"gofermart/internal/order/order_models"
+	"github.com/MaxBoych/gofermart/internal/order/order_models"
 )
 
 type UseCase interface {

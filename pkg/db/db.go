@@ -2,9 +2,9 @@ package db
 
 import (
 	"context"
+	"github.com/MaxBoych/gofermart/pkg/logger"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
-	"gofermart/pkg/logger"
 )
 
 type DB struct {

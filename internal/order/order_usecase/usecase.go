@@ -3,12 +3,12 @@ package order_usecase
 import (
 	"context"
 	"errors"
+	"github.com/MaxBoych/gofermart/internal/order"
+	"github.com/MaxBoych/gofermart/internal/order/order_models"
+	"github.com/MaxBoych/gofermart/pkg/errs"
+	"github.com/MaxBoych/gofermart/pkg/utils"
 	"github.com/avito-tech/go-transaction-manager/trm/v2/manager"
 	"github.com/jackc/pgx/v5"
-	"gofermart/internal/order"
-	"gofermart/internal/order/order_models"
-	"gofermart/pkg/errs"
-	"gofermart/pkg/utils"
 )
 
 type OrderUseCase struct {

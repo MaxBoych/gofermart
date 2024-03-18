@@ -1,12 +1,12 @@
 package middlewares
 
 import (
+	"github.com/MaxBoych/gofermart/pkg/cookie"
+	"github.com/MaxBoych/gofermart/pkg/errs"
+	"github.com/MaxBoych/gofermart/pkg/jwt"
+	"github.com/MaxBoych/gofermart/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
-	"gofermart/pkg/cookie"
-	"gofermart/pkg/errs"
-	"gofermart/pkg/jwt"
-	"gofermart/pkg/logger"
 )
 
 func (m *MiddlewareManager) AuthMiddleware() fiber.Handler {

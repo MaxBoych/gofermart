@@ -1,0 +1,62 @@
+package user_delivery
+
+import (
+	"github.com/gofiber/fiber/v2"
+	"gofermart/internal/user"
+	"gofermart/internal/user/user_models"
+	"gofermart/pkg/cookie"
+	"gofermart/pkg/errs"
+	"time"
+)
+
+type UserHandler struct {
+	useCase user.UseCase
+}
+
+func NewUserHandler(useCase user.UseCase) *UserHandler {
+	return &UserHandler{
+		useCase: useCase,
+	}
+}
+
+func (h *UserHandler) Register() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		req := user_models.UserRegisterRequest{}
+		if err := ctx.BodyParser(&req); err != nil {
+			return errs.HttpErrInvalidRequest
+		}
+
+		if err := h.useCase.Register(ctx.Context(), req); err != nil {
+			return err
+		}
+
+		return ctx.JSON(fiber.Map{
+			"data": "Successfully registered",
+		})
+	}
+}
+
+func (h *UserHandler) Login() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		req := user_models.UserLoginRequest{}
+		if err := ctx.BodyParser(&req); err != nil {
+			return errs.HttpErrInvalidRequest
+		}
+
+		token, err := h.useCase.Login(ctx.Context(), req)
+		if err != nil {
+			return err
+		}
+
+		cookie.SetCookie(ctx, user_models.CookieData{
+			Name:    "token",
+			Value:   token,
+			Expires: time.Now().Add(time.Hour * 72),
+			Domain:  ctx.Hostname(),
+		})
+
+		return ctx.JSON(fiber.Map{
+			"data": "Successfully logined",
+		})
+	}
+}

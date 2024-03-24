@@ -104,6 +104,9 @@ func (r *BalanceRepo) UpdateBalance(ctx context.Context, req balance_models.Bala
 		return err
 	}
 	logger.Log.Info("UpdateBalance SQL query", zap.String("query", query))
+	for _, a := range args {
+		logger.Log.Info("UpdateBalance SQL args", zap.Any("arg", a))
+	}
 
 	tr := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	_, err = tr.Exec(ctx, query, args...)

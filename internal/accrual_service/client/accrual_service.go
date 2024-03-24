@@ -31,6 +31,8 @@ func NewAccrualServiceClient(
 }
 
 func (c *AccrualServiceClient) Run() {
+	logger.Log.Info("Accrual Service is started", zap.String("address", c.AccrualSystemAddress))
+	
 	go func() {
 		for reqWithResp := range c.Queue {
 			resp, err := http.DefaultClient.Do(reqWithResp.Request)

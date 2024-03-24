@@ -132,7 +132,6 @@ func (uc *OrderUseCase) RefreshAndGetOrders(ctx context.Context, userID int64) (
 				if err != nil {
 					return
 				}
-				resp.Body.Close()
 
 				updatedOrder := ordermodels.OrderStorageData{
 					Number:    oldOrderData.Number,

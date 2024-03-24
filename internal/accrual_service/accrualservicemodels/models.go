@@ -7,7 +7,12 @@ import (
 
 type AccrualRequestWithResponse struct {
 	Request  *http.Request
-	Response chan *http.Response
+	Response chan *ResponseData
+}
+
+type ResponseData struct {
+	Body   []byte
+	Status uint16
 }
 
 type AccrualOrderResponseData struct {

@@ -39,12 +39,24 @@ func (c *AccrualServiceClient) Run() {
 				reqWithResp.Response <- nil
 				continue
 			}
-			reqWithResp.Response <- resp
+			logger.Log.Info("Status for order is " + resp.Status)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				logger.Log.Error("Error to read response body", zap.Error(err))
+				reqWithResp.Response <- nil
+				continue
+			}
+
+			reqWithResp.Response <- &accrualservicemodels.ResponseData{
+				Body:   body,
+				Status: uint16(resp.StatusCode),
+			}
+			resp.Body.Close()
 		}
 	}()
 }
 
-func (c *AccrualServiceClient) SendRequest(order ordermodels.OrderStorageData) (*http.Response, error) {
+func (c *AccrualServiceClient) SendRequest(order ordermodels.OrderStorageData) ([]byte, error) {
 	for i := 0; i < 3; i++ {
 		req, err := http.NewRequest(
 			"GET",
@@ -59,7 +71,7 @@ func (c *AccrualServiceClient) SendRequest(order ordermodels.OrderStorageData) (
 		reqDump, _ := httputil.DumpRequestOut(req, true)
 		logger.Log.Info("request data", zap.String("request", string(reqDump)))
 
-		responseChan := make(chan *http.Response)
+		responseChan := make(chan *accrualservicemodels.ResponseData)
 		reqWithResp := accrualservicemodels.AccrualRequestWithResponse{
 			Request:  req,
 			Response: responseChan,
@@ -71,11 +83,10 @@ func (c *AccrualServiceClient) SendRequest(order ordermodels.OrderStorageData) (
 		if resp == nil {
 			continue
 		}
-		logger.Log.Info("Status for order " + order.Number + " is " + resp.Status)
 
-		switch resp.StatusCode {
+		switch resp.Status {
 		case http.StatusOK:
-			return resp, nil
+			return resp.Body, nil
 		case http.StatusTooManyRequests:
 			i--
 			time.Sleep(consts.SleepTime)
@@ -90,12 +101,7 @@ func (c *AccrualServiceClient) SendRequest(order ordermodels.OrderStorageData) (
 	return nil, errs.HTTPErrConnectionRefused
 }
 
-func (c *AccrualServiceClient) HTTPResponseToOrderAccrualResponse(resp *http.Response) (*accrualservicemodels.AccrualOrderResponseData, error) {
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		logger.Log.Error("Error to read response body", zap.Error(err))
-		return nil, err
-	}
+func (c *AccrualServiceClient) HTTPResponseToOrderAccrualResponse(body []byte) (*accrualservicemodels.AccrualOrderResponseData, error) {
 	logger.Log.Info("Response body content", zap.String("content", string(body)))
 
 	var data accrualservicemodels.AccrualOrderResponseData

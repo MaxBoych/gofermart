@@ -64,8 +64,8 @@ func (uc *BalanceUC) Withdraw(ctx context.Context, req balancemodels.WithdrawReq
 	})
 }
 
-func (uc *BalanceUC) GetWithdrawals(ctx context.Context, userId int64) ([]balancemodels.WithdrawResponseData, error) {
-	withdrawals, err := uc.balanceRepo.GetWithdrawals(ctx, userId)
+func (uc *BalanceUC) GetWithdrawals(ctx context.Context, userID int64) ([]balancemodels.WithdrawResponseData, error) {
+	withdrawals, err := uc.balanceRepo.GetWithdrawals(ctx, userID)
 	if err != nil {
 		return nil, err
 	}

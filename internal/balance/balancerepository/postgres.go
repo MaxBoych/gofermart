@@ -144,10 +144,10 @@ func (r *BalanceRepo) CreateWithdraw(ctx context.Context, req balancemodels.With
 	return nil
 }
 
-func (r *BalanceRepo) GetWithdrawals(ctx context.Context, userId int64) ([]balancemodels.WithdrawStorageData, error) {
+func (r *BalanceRepo) GetWithdrawals(ctx context.Context, userID int64) ([]balancemodels.WithdrawStorageData, error) {
 	query, args, err := sq.Select(sqlqueries.SelectWithdraw...).
 		From(sqlqueries.WithdrawTableName).
-		Where(sq.Eq{sqlqueries.UserIDColumnName: userId}).
+		Where(sq.Eq{sqlqueries.UserIDColumnName: userID}).
 		OrderBy(sqlqueries.CreatedAtColumnName + " DESC").
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

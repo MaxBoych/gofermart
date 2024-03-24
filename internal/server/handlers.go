@@ -31,7 +31,7 @@ func (s *Server) MapHandlers() {
 	user_delivery.MapUserRoutes(userGroup, userHandler, mw)
 
 	orderRepo := order_repository.NewOrderRepo(s.db.Pool, getter)
-	orderUC := order_usecase.NewOrderUC(orderRepo, trManager)
+	orderUC := order_usecase.NewOrderUC(orderRepo, s.accrualServiceClient, s.cfg, trManager)
 	orderHandler := order_delivery.NewOrderHandler(orderUC)
 	orderGroup := s.fb.Group("api/user/orders")
 	order_delivery.MapOrderRoutes(orderGroup, orderHandler, mw)

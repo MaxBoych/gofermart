@@ -21,6 +21,10 @@ type OrderStorageData struct {
 	UpdatedAt time.Time   `db:"updated_at"`
 }
 
+func (o *OrderStorageData) IsFinalStatus() bool {
+	return o.Status == OrderStatusInvalid || o.Status == OrderStatusProcessed
+}
+
 type OrderResponseData struct {
 	Number     string      `json:"number"`
 	Status     OrderStatus `json:"status"`

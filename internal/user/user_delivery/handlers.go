@@ -26,9 +26,17 @@ func (h *UserHandler) Register() fiber.Handler {
 			return errs.HttpErrInvalidRequest
 		}
 
-		if err := h.useCase.Register(ctx.Context(), req); err != nil {
+		token, err := h.useCase.Register(ctx.Context(), req)
+		if err != nil {
 			return err
 		}
+
+		cookie.SetCookie(ctx, user_models.CookieData{
+			Name:    "token",
+			Value:   token,
+			Expires: time.Now().Add(time.Hour * 72),
+			Domain:  ctx.Hostname(),
+		})
 
 		return ctx.JSON(fiber.Map{
 			"data": "Successfully registered",

@@ -38,8 +38,8 @@ func NewUserUC(
 	}
 }
 
-func (uc *UserUseCase) Register(ctx context.Context, req user_models.UserRegisterRequest) error {
-
+func (uc *UserUseCase) Register(ctx context.Context, req user_models.UserRegisterRequest) (string, error) {
+	var tokenValue string
 	if err := uc.trManager.Do(ctx, func(ctx context.Context) error {
 		data, err := uc.userRepo.GetUserByLogin(ctx, req.Login)
 		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
@@ -61,13 +61,29 @@ func (uc *UserUseCase) Register(ctx context.Context, req user_models.UserRegiste
 			return err
 		}
 
-		return uc.balanceRepo.CreateBalance(ctx, userId)
+		err = uc.balanceRepo.CreateBalance(ctx, userId)
+		if err != nil {
+			return err
+		}
+
+		newToken, err := uc.generateNewToken(ctx, data.UserId)
+		if err != nil {
+			return err
+		}
+
+		err = uc.tokenRepo.CreateToken(ctx, *newToken)
+		if err != nil {
+			return err
+		}
+
+		tokenValue = newToken.Value
+		return nil
 	}); err != nil {
 		logger.Log.Error("rollback transaction: trManager.Do() failed", zap.String("err", err.Error()))
-		return err
+		return "", err
 	}
 
-	return nil
+	return tokenValue, nil
 }
 
 func (uc *UserUseCase) Login(ctx context.Context, req user_models.UserLoginRequest) (string, error) {

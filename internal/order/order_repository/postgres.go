@@ -121,3 +121,26 @@ func (r *OrderRepo) GetOrders(ctx context.Context, userId int64) ([]order_models
 
 	return orders, nil
 }
+
+func (r *OrderRepo) UpdateOrder(ctx context.Context, updatedOrder order_models.OrderStorageData) error {
+	query, args, err := sq.Update(sql_queries.OrderTableName).
+		Set(sql_queries.OrderStatusColumnName, updatedOrder.Status).
+		Set(sql_queries.OrderAccrualColumnName, updatedOrder.Accrual).
+		Where(sq.Eq{sql_queries.OrderNumberColumnName: updatedOrder.Number}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+
+	if err != nil {
+		logger.Log.Error("Error to build sql UPDATE query", zap.Error(err))
+		return err
+	}
+
+	tr := r.txGetter.DefaultTrOrDB(ctx, r.db)
+	_, err = tr.Exec(ctx, query, args...)
+	if err != nil {
+		logger.Log.Error("Error to execute sql UPDATE query", zap.Error(err))
+		return err
+	}
+
+	return nil
+}

@@ -14,4 +14,5 @@ var (
 	ErrOrderDuplicateAnotherUser = errors.New("order was already uploaded by another user")
 	ErrOrderNoContent            = errors.New("this user has no such data")
 	ErrNotEnoughFunds            = errors.New("not enough funds on balance")
+	ErrTooManyRequests           = errors.New("too many requests")
 )

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/MaxBoych/gofermart/internal/accrual_service/client"
 	"github.com/MaxBoych/gofermart/internal/config"
 	"github.com/MaxBoych/gofermart/pkg/db"
 	"github.com/MaxBoych/gofermart/pkg/logger"
@@ -12,16 +13,22 @@ import (
 )
 
 type Server struct {
-	cfg *config.Config
-	db  *db.DB
-	fb  *fiber.App
+	cfg                  *config.Config
+	db                   *db.DB
+	fb                   *fiber.App
+	accrualServiceClient *client.AccrualServiceClient
 }
 
-func NewServer(cfg *config.Config, db *db.DB) *Server {
+func NewServer(
+	cfg *config.Config,
+	db *db.DB,
+	accrualServiceClient *client.AccrualServiceClient,
+) *Server {
 	return &Server{
-		cfg: cfg,
-		db:  db,
-		fb:  fiber.New(),
+		cfg:                  cfg,
+		db:                   db,
+		fb:                   fiber.New(),
+		accrualServiceClient: accrualServiceClient,
 	}
 }
 

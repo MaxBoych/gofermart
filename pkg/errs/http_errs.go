@@ -14,4 +14,5 @@ var (
 	HttpErrOrderDuplicateAnotherUser = fiber.NewError(fiber.StatusConflict, ErrOrderDuplicateAnotherUser.Error())
 	HttpErrOrderNoContent            = fiber.NewError(fiber.StatusNoContent, ErrOrderNoContent.Error())
 	HttpErrNotEnoughFunds            = fiber.NewError(fiber.StatusPaymentRequired, ErrNotEnoughFunds.Error())
+	HttpErrTooManyRequests           = fiber.NewError(fiber.StatusTooManyRequests, fiber.ErrTooManyRequests.Error())
 )

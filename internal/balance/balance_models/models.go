@@ -29,6 +29,16 @@ type WithdrawRequestData struct {
 	UserId int64   `json:"-"`
 }
 
+type BalanceChangeData struct {
+	Action string
+	Sum    float64
+	UserId int64
+}
+
+func (c *BalanceChangeData) IsWithdraw() bool {
+	return c.Action == "-"
+}
+
 type WithdrawStorageData struct {
 	WithdrawId int64   `db:"withdraw_id"`
 	Order      string  `db:"order"`

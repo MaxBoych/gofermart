@@ -82,6 +82,13 @@ func (r *OrderRepo) CreateOrder(ctx context.Context, data order_models.OrderStor
 }
 
 func (r *OrderRepo) GetOrders(ctx context.Context, userId int64) ([]order_models.OrderStorageData, error) {
+	//var conditions sq.And
+	//conditions = append(conditions, sq.Eq{sql_queries.UserIdColumnName: userId})
+	//if nonFinalOnly {
+	//	conditions = append(conditions, sq.NotEq{sql_queries.OrderStatusColumnName: order_models.OrderStatusInvalid})
+	//	conditions = append(conditions, sq.NotEq{sql_queries.OrderStatusColumnName: order_models.OrderStatusProcessed})
+	//}
+
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	query, args, err := psql.Select(sql_queries.SelectOrder...).
 		From(sql_queries.OrderTableName).

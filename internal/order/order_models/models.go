@@ -6,6 +6,7 @@ type OrderStatus string
 
 const (
 	OrderStatusNew        OrderStatus = "NEW"
+	OrderStatusRegistered OrderStatus = "REGISTERED"
 	OrderStatusProcessing OrderStatus = "PROCESSING"
 	OrderStatusInvalid    OrderStatus = "INVALID"
 	OrderStatusProcessed  OrderStatus = "PROCESSED"
@@ -23,6 +24,10 @@ type OrderStorageData struct {
 
 func (o *OrderStorageData) IsFinalStatus() bool {
 	return o.Status == OrderStatusInvalid || o.Status == OrderStatusProcessed
+}
+
+func (o *OrderStorageData) IsProcessed() bool {
+	return o.Status == OrderStatusProcessed
 }
 
 type OrderResponseData struct {

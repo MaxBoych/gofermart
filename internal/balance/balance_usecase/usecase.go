@@ -52,7 +52,12 @@ func (uc *BalanceUC) Withdraw(ctx context.Context, req balance_models.WithdrawRe
 			return err
 		}
 
-		return uc.balanceRepo.UpdateBalance(ctx, req)
+		changeData := balance_models.BalanceChangeData{
+			Action: "-",
+			Sum:    req.Sum,
+			UserId: req.UserId,
+		}
+		return uc.balanceRepo.UpdateBalance(ctx, changeData)
 	})
 }
 

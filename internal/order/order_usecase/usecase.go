@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/MaxBoych/gofermart/internal/accrual_service/client"
+	"github.com/MaxBoych/gofermart/internal/balance"
+	"github.com/MaxBoych/gofermart/internal/balance/balance_models"
 	"github.com/MaxBoych/gofermart/internal/config"
 	"github.com/MaxBoych/gofermart/internal/order"
 	"github.com/MaxBoych/gofermart/internal/order/order_models"
@@ -16,6 +18,7 @@ import (
 
 type OrderUseCase struct {
 	orderRepo            order.Repository
+	balanceRepo          balance.Repository
 	accrualServiceClient *client.AccrualServiceClient
 	cfg                  *config.Config
 	trManager            *manager.Manager
@@ -23,12 +26,14 @@ type OrderUseCase struct {
 
 func NewOrderUC(
 	orderRepo order.Repository,
+	balanceRepo balance.Repository,
 	accrualServiceClient *client.AccrualServiceClient,
 	cfg *config.Config,
 	trManager *manager.Manager,
 ) *OrderUseCase {
 	return &OrderUseCase{
 		orderRepo:            orderRepo,
+		balanceRepo:          balanceRepo,
 		accrualServiceClient: accrualServiceClient,
 		cfg:                  cfg,
 		trManager:            trManager,
@@ -66,7 +71,24 @@ func (uc *OrderUseCase) UploadNewOrder(ctx context.Context, number string, userI
 	return err
 }
 
-func (uc *OrderUseCase) GetOrders(ctx context.Context, userId int64) ([]order_models.OrderResponseData, error) {
+func (uc *OrderUseCase) updateOrder(ctx context.Context, updatedOrder order_models.OrderStorageData) error {
+	err := uc.orderRepo.UpdateOrder(ctx, updatedOrder)
+	if err != nil {
+		return err
+	}
+	if !updatedOrder.IsProcessed() {
+		return nil
+	}
+
+	changeData := balance_models.BalanceChangeData{
+		Action: "+",
+		Sum:    *updatedOrder.Accrual,
+		UserId: updatedOrder.UserId,
+	}
+	return uc.balanceRepo.UpdateBalance(ctx, changeData)
+}
+
+func (uc *OrderUseCase) RefreshAndGetOrders(ctx context.Context, userId int64) ([]order_models.OrderResponseData, error) {
 	orders, err := uc.orderRepo.GetOrders(ctx, userId)
 	if err != nil {
 		return nil, err
@@ -115,7 +137,7 @@ func (uc *OrderUseCase) GetOrders(ctx context.Context, userId int64) ([]order_mo
 					CreatedAt: oldOrderData.CreatedAt,
 				}
 
-				err = uc.orderRepo.UpdateOrder(ctx, updatedOrder)
+				err = uc.updateOrder(ctx, updatedOrder)
 				if err != nil {
 					return
 				}
@@ -136,3 +158,14 @@ func (uc *OrderUseCase) GetOrders(ctx context.Context, userId int64) ([]order_mo
 
 	return response, nil
 }
+
+/*func (uc *OrderUseCase) RefreshAndGetOrders(ctx context.Context, userId int64) ([]order_models.OrderStorageData, error) {
+	oldOrdersData, err := uc.orderRepo.GetOrders(ctx, userId, true)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(oldOrdersData) == 0 {
+		return
+	}
+}*/

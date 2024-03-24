@@ -87,10 +87,15 @@ func (r *BalanceRepo) CreateBalance(ctx context.Context, userId int64) error {
 	return nil
 }
 
-func (r *BalanceRepo) UpdateBalance(ctx context.Context, req balance_models.WithdrawRequestData) error {
-	query, args, err := sq.Update(sql_queries.BalanceTableName).
-		Set(sql_queries.BalanceWithdrawnColumnName, sq.Expr(sql_queries.BalanceWithdrawnColumnName+" + 1")).
-		Set(sql_queries.BalanceCurrentColumnName, sq.Expr(sql_queries.BalanceCurrentColumnName+" - ?", req.Sum)).
+func (r *BalanceRepo) UpdateBalance(ctx context.Context, req balance_models.BalanceChangeData) error {
+	updateBuilder := sq.Update(sql_queries.BalanceTableName).
+		Set(sql_queries.BalanceCurrentColumnName, sq.Expr(sql_queries.BalanceCurrentColumnName+" "+req.Action+" ?", req.Sum))
+
+	if req.IsWithdraw() {
+		updateBuilder = updateBuilder.Set(sql_queries.BalanceWithdrawnColumnName, sq.Expr(sql_queries.BalanceWithdrawnColumnName+" + 1"))
+	}
+
+	query, args, err := updateBuilder.
 		Where(sq.Eq{sql_queries.UserIdColumnName: req.UserId}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

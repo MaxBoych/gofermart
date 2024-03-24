@@ -38,7 +38,7 @@ func (h *OrderHandler) GetOrders() fiber.Handler {
 		ctx.Set("Content-Type", "application/json")
 		userId := ctx.Locals("user_id").(int64)
 
-		orders, err := h.useCase.GetOrders(ctx.Context(), userId)
+		orders, err := h.useCase.RefreshAndGetOrders(ctx.Context(), userId)
 		if err != nil {
 			return err
 		}

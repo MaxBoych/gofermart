@@ -2,19 +2,26 @@ package balance_delivery
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/MaxBoych/gofermart/internal/balance"
 	"github.com/MaxBoych/gofermart/internal/balance/balance_models"
+	"github.com/MaxBoych/gofermart/internal/order"
 	"github.com/MaxBoych/gofermart/pkg/errs"
 	"github.com/gofiber/fiber/v2"
 )
 
 type BalanceHandler struct {
-	useCase balance.UseCase
+	balanceUC balance.UseCase
+	orderUC   order.UseCase
 }
 
-func NewBalanceHandler(useCase balance.UseCase) *BalanceHandler {
+func NewBalanceHandler(
+	balanceUC balance.UseCase,
+	orderUC order.UseCase,
+) *BalanceHandler {
 	return &BalanceHandler{
-		useCase: useCase,
+		balanceUC: balanceUC,
+		orderUC:   orderUC,
 	}
 }
 
@@ -23,7 +30,14 @@ func (h *BalanceHandler) GetBalance() fiber.Handler {
 		ctx.Set("Content-Type", "application/json")
 		userId := ctx.Locals("user_id").(int64)
 
-		balanceResp, err := h.useCase.GetBalance(ctx.Context(), userId)
+		c := ctx.Context()
+
+		_, err := h.orderUC.RefreshAndGetOrders(c, userId)
+		if err != nil && !errors.Is(err, errs.HttpErrOrderNoContent) {
+			return err
+		}
+
+		balanceResp, err := h.balanceUC.GetBalance(c, userId)
 		if err != nil {
 			return err
 		}
@@ -48,7 +62,14 @@ func (h *BalanceHandler) Withdraw() fiber.Handler {
 		}
 		req.UserId = userId
 
-		return h.useCase.Withdraw(ctx.Context(), req)
+		c := ctx.Context()
+
+		_, err := h.orderUC.RefreshAndGetOrders(c, userId)
+		if err != nil && !errors.Is(err, errs.HttpErrOrderNoContent) {
+			return err
+		}
+
+		return h.balanceUC.Withdraw(c, req)
 	}
 }
 
@@ -57,7 +78,7 @@ func (h *BalanceHandler) GetWithdrawals() fiber.Handler {
 		ctx.Set("Content-Type", "application/json")
 		userId := ctx.Locals("user_id").(int64)
 
-		withdrawals, err := h.useCase.GetWithdrawals(ctx.Context(), userId)
+		withdrawals, err := h.balanceUC.GetWithdrawals(ctx.Context(), userId)
 		if err != nil {
 			return err
 		}

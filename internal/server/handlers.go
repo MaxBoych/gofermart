@@ -31,13 +31,13 @@ func (s *Server) MapHandlers() {
 	user_delivery.MapUserRoutes(userGroup, userHandler, mw)
 
 	orderRepo := order_repository.NewOrderRepo(s.db.Pool, getter)
-	orderUC := order_usecase.NewOrderUC(orderRepo, s.accrualServiceClient, s.cfg, trManager)
+	orderUC := order_usecase.NewOrderUC(orderRepo, balanceRepo, s.accrualServiceClient, s.cfg, trManager)
 	orderHandler := order_delivery.NewOrderHandler(orderUC)
 	orderGroup := s.fb.Group("api/user/orders")
 	order_delivery.MapOrderRoutes(orderGroup, orderHandler, mw)
 
 	balanceUC := balance_usecase.NewBalanceUC(balanceRepo, trManager)
-	balanceHandler := balance_delivery.NewBalanceHandler(balanceUC)
+	balanceHandler := balance_delivery.NewBalanceHandler(balanceUC, orderUC)
 	balanceGroup := s.fb.Group("api/user")
 	balance_delivery.MapBalanceRoutes(balanceGroup, balanceHandler, mw)
 }

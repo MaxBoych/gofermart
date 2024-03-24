@@ -146,6 +146,7 @@ func (r *BalanceRepo) GetWithdrawals(ctx context.Context, userId int64) ([]balan
 		From(sql_queries.WithdrawTableName).
 		Where(sq.Eq{sql_queries.UserIdColumnName: userId}).
 		OrderBy(sql_queries.CreatedAtColumnName + " DESC").
+		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {
 		logger.Log.Error("Error to make sql builder, sql SELECT query", zap.Error(err))

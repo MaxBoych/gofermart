@@ -30,7 +30,7 @@ const (
 
 	WithdrawTableName       = "user_withdraw"
 	WithdrawIdColumnName    = "withdraw_id"
-	WithdrawOrderColumnName = "order"
+	WithdrawOrderColumnName = "order_number"
 	WithdrawSumColumnName   = "sum"
 
 	CreatedAtColumnName = "created_at"

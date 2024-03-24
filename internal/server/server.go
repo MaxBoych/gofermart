@@ -1,0 +1,60 @@
+package server
+
+import (
+	"github.com/MaxBoych/gofermart/internal/accrual_service/client"
+	"github.com/MaxBoych/gofermart/internal/config"
+	"github.com/MaxBoych/gofermart/pkg/db"
+	"github.com/MaxBoych/gofermart/pkg/logger"
+	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
+	"os"
+	"os/signal"
+	"syscall"
+)
+
+type Server struct {
+	cfg                  *config.Config
+	db                   *db.DB
+	fb                   *fiber.App
+	accrualServiceClient *client.AccrualServiceClient
+}
+
+func NewServer(
+	cfg *config.Config,
+	db *db.DB,
+	accrualServiceClient *client.AccrualServiceClient,
+) *Server {
+	return &Server{
+		cfg:                  cfg,
+		db:                   db,
+		fb:                   fiber.New(),
+		accrualServiceClient: accrualServiceClient,
+	}
+}
+
+func (s *Server) Run() error {
+	s.MapHandlers()
+
+	go func() {
+		addr := s.cfg.RunAddr
+		logger.Log.Info("Server is started", zap.String("address", addr))
+
+		err := s.fb.Listen(addr)
+		if err != nil {
+			logger.Log.Fatal(err.Error())
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	err := s.fb.Shutdown()
+	if err != nil {
+		logger.Log.Error("Error to shutdown fiber", zap.Error(err))
+	} else {
+		logger.Log.Info("Fiber closed properly")
+	}
+
+	return nil
+}

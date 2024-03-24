@@ -24,10 +24,12 @@ func (m *MiddlewareManager) AuthMiddleware() fiber.Handler {
 		}
 
 		// Костыль для тестов. В тестах нет проверок куки, есть только хедеров
-		tokenValue = ctx.Get("Authorization")
 		if tokenValue == "" {
-			logger.Log.Error("Authorization Header is empty")
-			return errs.HttpErrCookieIsEmpty
+			tokenValue = ctx.Get("Authorization")
+			if tokenValue == "" {
+				logger.Log.Error("Authorization Header is empty")
+				return errs.HttpErrCookieIsEmpty
+			}
 		}
 		//
 

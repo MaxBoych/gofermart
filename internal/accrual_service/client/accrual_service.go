@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	"io"
 	"net/http"
+	"net/http/httputil"
 	"time"
 )
 
@@ -52,6 +53,9 @@ func (c *AccrualServiceClient) SendRequest(order order_models.OrderStorageData) 
 			logger.Log.Error("Error to create http.NewRequest", zap.Error(err))
 			return nil, err
 		}
+		
+		reqDump, _ := httputil.DumpRequestOut(req, true)
+		logger.Log.Info("request data", zap.String("request", string(reqDump)))
 
 		responseChan := make(chan *http.Response)
 		reqWithResp := accrual_service_models.AccrualRequestWithResponse{
@@ -84,6 +88,7 @@ func (c *AccrualServiceClient) HttpResponseToOrderAccrualResponse(resp *http.Res
 		logger.Log.Error("Error to read response body", zap.Error(err))
 		return nil, err
 	}
+	logger.Log.Info("Response body content", zap.String("content", string(body)))
 
 	var data accrual_service_models.AccrualOrderResponseData
 	if err := json.Unmarshal(body, &data); err != nil {

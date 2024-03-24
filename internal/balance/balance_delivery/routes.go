@@ -8,6 +8,6 @@ import (
 
 func MapBalanceRoutes(group fiber.Router, h balance.Handler, mw *middlewares.MiddlewareManager) {
 	group.Get("/balance", mw.AuthMiddleware(), h.GetBalance())
-	group.Get("/balance/withdraw", mw.AuthMiddleware(), h.Withdraw())
+	group.Post("/balance/withdraw", mw.AuthMiddleware(), h.Withdraw())
 	group.Get("/withdrawals", mw.AuthMiddleware(), h.GetWithdrawals())
 }

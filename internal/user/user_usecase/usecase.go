@@ -66,7 +66,7 @@ func (uc *UserUseCase) Register(ctx context.Context, req user_models.UserRegiste
 			return err
 		}
 
-		newToken, err := uc.generateNewToken(ctx, data.UserId)
+		newToken, err := uc.generateNewToken(ctx, userId)
 		if err != nil {
 			return err
 		}

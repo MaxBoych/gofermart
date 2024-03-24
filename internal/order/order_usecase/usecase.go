@@ -101,6 +101,12 @@ func (uc *OrderUseCase) GetOrders(ctx context.Context, userId int64) ([]order_mo
 
 				resp, err := uc.accrualServiceClient.SendRequest(oldOrderData)
 				if err != nil {
+					if errors.Is(err, errs.HttpErrOrderNoContent) {
+						ordersMutex.Mutex.Lock()
+						ordersMutex.Orders[i] = oldOrderData
+						ordersMutex.Mutex.Unlock()
+						return
+					}
 					return
 				}
 

@@ -20,6 +20,7 @@ func NewBalanceHandler(useCase balance.UseCase) *BalanceHandler {
 
 func (h *BalanceHandler) GetBalance() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
+		ctx.Set("Content-Type", "application/json")
 		userId := ctx.Locals("user_id").(int64)
 
 		balanceResp, err := h.useCase.GetBalance(ctx.Context(), userId)
@@ -53,9 +54,13 @@ func (h *BalanceHandler) Withdraw() fiber.Handler {
 
 func (h *BalanceHandler) GetWithdrawals() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
+		ctx.Set("Content-Type", "application/json")
 		userId := ctx.Locals("user_id").(int64)
 
 		withdrawals, err := h.useCase.GetWithdrawals(ctx.Context(), userId)
+		if err != nil {
+			return err
+		}
 
 		jsonResp, err := json.Marshal(withdrawals)
 		if err != nil {

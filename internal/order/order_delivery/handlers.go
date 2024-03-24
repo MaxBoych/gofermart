@@ -35,6 +35,7 @@ func (h *OrderHandler) UploadNewOrder() fiber.Handler {
 
 func (h *OrderHandler) GetOrders() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
+		ctx.Set("Content-Type", "application/json")
 		userId := ctx.Locals("user_id").(int64)
 
 		orders, err := h.useCase.GetOrders(ctx.Context(), userId)

@@ -48,7 +48,6 @@ func ValidateTokenAndGetUserId(tokenValue string, key string) (int64, error) {
 		return -1, errors.New("incorrect token")
 	}
 
-	// 2-step conversion due to characteristics of jwt.MapClaims
 	userIdFloat, ok := claims["user_id"].(float64)
 	if !ok {
 		return -1, errors.New("incorrect user_id field inside token")

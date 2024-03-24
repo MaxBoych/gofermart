@@ -142,8 +142,7 @@ func (r *BalanceRepo) CreateWithdraw(ctx context.Context, req balance_models.Wit
 }
 
 func (r *BalanceRepo) GetWithdrawals(ctx context.Context, userId int64) ([]balance_models.WithdrawStorageData, error) {
-	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
-	query, args, err := psql.Select(sql_queries.SelectWithdraw...).
+	query, args, err := sq.Select(sql_queries.SelectWithdraw...).
 		From(sql_queries.WithdrawTableName).
 		Where(sq.Eq{sql_queries.UserIdColumnName: userId}).
 		OrderBy(sql_queries.CreatedAtColumnName + " DESC").
@@ -152,6 +151,7 @@ func (r *BalanceRepo) GetWithdrawals(ctx context.Context, userId int64) ([]balan
 		logger.Log.Error("Error to make sql builder, sql SELECT query", zap.Error(err))
 		return nil, err
 	}
+	logger.Log.Info("SelectWithdrawals SQL query", zap.String("query", query))
 
 	tr := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	rows, err := tr.Query(ctx, query, args...)

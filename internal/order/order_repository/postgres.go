@@ -89,8 +89,7 @@ func (r *OrderRepo) GetOrders(ctx context.Context, userId int64) ([]order_models
 	//	conditions = append(conditions, sq.NotEq{sql_queries.OrderStatusColumnName: order_models.OrderStatusProcessed})
 	//}
 
-	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
-	query, args, err := psql.Select(sql_queries.SelectOrder...).
+	query, args, err := sq.Select(sql_queries.SelectOrder...).
 		From(sql_queries.OrderTableName).
 		Where(sq.Eq{sql_queries.UserIdColumnName: userId}).
 		OrderBy(sql_queries.CreatedAtColumnName + " DESC").

@@ -28,7 +28,7 @@ func NewBalanceRepo(db *pgxpool.Pool, txGetter *trmpgx.CtxGetter) *BalanceRepo {
 
 func (r *BalanceRepo) GetBalance(ctx context.Context, userId int64) (*balance_models.BalanceStorageData, error) {
 	query, args, err := sq.Select(sql_queries.SelectBalance...).
-		From(sql_queries.OrderTableName).
+		From(sql_queries.BalanceTableName).
 		Where(sq.Eq{sql_queries.UserIdColumnName: userId}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

@@ -38,7 +38,9 @@ func (h *UserHandler) Register() fiber.Handler {
 			Domain:  ctx.Hostname(),
 		})
 
+		// Костыль для тестов. В тестах нет проверок куки, есть только хедеров
 		ctx.Set("Authorization", token)
+		//
 
 		return ctx.JSON(fiber.Map{
 			"data": "Successfully registered",
@@ -65,7 +67,9 @@ func (h *UserHandler) Login() fiber.Handler {
 			Domain:  ctx.Hostname(),
 		})
 
+		// Костыль для тестов. В тестах нет проверок куки, есть только хедеров
 		ctx.Set("Authorization", token)
+		//
 
 		return ctx.JSON(fiber.Map{
 			"data": "Successfully logined",

@@ -49,7 +49,7 @@ func (r *BalanceRepo) GetBalance(ctx context.Context, userId int64) (*balance_mo
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			logger.Log.Error("There is no such row", zap.Error(err))
+			//logger.Log.Error("There is no such row", zap.Error(err))
 			return nil, err
 		}
 

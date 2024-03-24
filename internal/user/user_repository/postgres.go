@@ -42,7 +42,7 @@ func (r *UserRepo) GetUserByLogin(ctx context.Context, login string) (*user_mode
 	err = tr.QueryRow(ctx, query, args...).Scan(&data.UserId, &data.Login, &data.Password, &data.CreatedAt, &data.UpdatedAt, &data.DeletedAt)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			logger.Log.Error("There is no such row", zap.Error(err))
+			//logger.Log.Error("There is no such row", zap.Error(err))
 			return nil, err
 		}
 

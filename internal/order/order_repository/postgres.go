@@ -42,7 +42,7 @@ func (r *OrderRepo) GetOrder(ctx context.Context, number string) (*order_models.
 	err = tr.QueryRow(ctx, query, args...).Scan(&data.OrderId, &data.Number, &data.UserId, &data.Status, &data.Accrual, &data.CreatedAt, &data.UpdatedAt)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			logger.Log.Error("There is no such row", zap.Error(err))
+			//logger.Log.Error("There is no such row", zap.Error(err))
 			return nil, err
 		}
 

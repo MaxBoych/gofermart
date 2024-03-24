@@ -2,10 +2,10 @@ package user
 
 import (
 	"context"
-	"github.com/MaxBoych/gofermart/internal/user/user_models"
+	"github.com/MaxBoych/gofermart/internal/user/usermodels"
 )
 
 type UseCase interface {
-	Register(ctx context.Context, req user_models.UserRegisterRequest) (string, error)
-	Login(ctx context.Context, req user_models.UserLoginRequest) (string, error)
+	Register(ctx context.Context, req usermodels.UserRegisterRequest) (string, error)
+	Login(ctx context.Context, req usermodels.UserLoginRequest) (string, error)
 }

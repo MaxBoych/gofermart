@@ -2,11 +2,11 @@ package token
 
 import (
 	"context"
-	"github.com/MaxBoych/gofermart/internal/token/token_models"
+	"github.com/MaxBoych/gofermart/internal/token/tokenmodels"
 )
 
 type Repository interface {
-	CreateToken(ctx context.Context, token token_models.TokenStorageData) error
-	GetToken(ctx context.Context, userId int64) (*token_models.TokenStorageData, error)
+	CreateToken(ctx context.Context, token tokenmodels.TokenStorageData) error
+	GetToken(ctx context.Context, userID int64) (*tokenmodels.TokenStorageData, error)
 	GetSecretKey(ctx context.Context) (string, error)
 }

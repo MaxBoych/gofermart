@@ -1,13 +1,13 @@
 package cookie
 
 import (
-	"github.com/MaxBoych/gofermart/internal/user/user_models"
+	"github.com/MaxBoych/gofermart/internal/user/usermodels"
 	"github.com/MaxBoych/gofermart/pkg/errs"
 	"github.com/gofiber/fiber/v2"
 	"strings"
 )
 
-func SetCookie(c *fiber.Ctx, params user_models.CookieData) {
+func SetCookie(c *fiber.Ctx, params usermodels.CookieData) {
 	cookie := &fiber.Cookie{
 		Name:     params.Name,
 		Value:    params.Value,
@@ -28,7 +28,7 @@ func SetCookie(c *fiber.Ctx, params user_models.CookieData) {
 func GetCookie(c *fiber.Ctx, name string) (string, error) {
 	cookie := c.Cookies(name)
 	if cookie == "" {
-		return "", errs.HttpErrCookieIsEmpty
+		return "", errs.HTTPErrCookieIsEmpty
 	}
 	return cookie, nil
 }

@@ -19,9 +19,9 @@ func GenerateSecretKey() (string, error) {
 	return base64.StdEncoding.EncodeToString(key), nil
 }
 
-func GenerateTokenValue(userId int64, key string) (string, error) {
+func GenerateTokenValue(userID int64, key string) (string, error) {
 	claims := jwt.MapClaims{
-		"user_id":    userId,
+		"user_id":    userID,
 		"expiration": time.Now().Add(time.Hour * 72).Unix(),
 	}
 
@@ -35,7 +35,7 @@ func GenerateTokenValue(userId int64, key string) (string, error) {
 	return signedToken, nil
 }
 
-func ValidateTokenAndGetUserId(tokenValue string, key string) (int64, error) {
+func ValidateTokenAndGetUserID(tokenValue string, key string) (int64, error) {
 	token, err := jwt.Parse(tokenValue, func(token *jwt.Token) (interface{}, error) {
 		return []byte(key), nil
 	})
@@ -48,21 +48,21 @@ func ValidateTokenAndGetUserId(tokenValue string, key string) (int64, error) {
 		return -1, errors.New("incorrect token")
 	}
 
-	userIdFloat, ok := claims["user_id"].(float64)
+	userIDFloat, ok := claims["user_id"].(float64)
 	if !ok {
 		return -1, errors.New("incorrect user_id field inside token")
 	}
-	userId := int64(userIdFloat)
+	userID := int64(userIDFloat)
 
 	if exp, ok := claims["expiration"].(float64); ok {
 		expTime := time.Unix(int64(exp), 0)
 		if !expTime.After(time.Now()) {
-			logger.Log.Info("Token expired", zap.Int64("user_id", userId))
+			logger.Log.Info("Token expired", zap.Int64("user_id", userID))
 			return -1, errors.New("token expired")
 		}
 	} else {
 		return -1, errors.New("error to get token expiration time")
 	}
 
-	return userId, nil
+	return userID, nil
 }

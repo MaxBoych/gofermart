@@ -2,10 +2,10 @@ package user
 
 import (
 	"context"
-	"github.com/MaxBoych/gofermart/internal/user/user_models"
+	"github.com/MaxBoych/gofermart/internal/user/usermodels"
 )
 
 type Repository interface {
-	CreateUser(ctx context.Context, req user_models.UserStorageData) (int64, error)
-	GetUserByLogin(ctx context.Context, login string) (*user_models.UserStorageData, error)
+	CreateUser(ctx context.Context, req usermodels.UserStorageData) (int64, error)
+	GetUserByLogin(ctx context.Context, login string) (*usermodels.UserStorageData, error)
 }

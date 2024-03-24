@@ -2,10 +2,10 @@ package order
 
 import (
 	"context"
-	"github.com/MaxBoych/gofermart/internal/order/order_models"
+	"github.com/MaxBoych/gofermart/internal/order/ordermodels"
 )
 
 type UseCase interface {
-	UploadNewOrder(ctx context.Context, number string, userId int64) error
-	RefreshAndGetOrders(ctx context.Context, userId int64) ([]order_models.OrderResponseData, error)
+	UploadNewOrder(ctx context.Context, number string, userID int64) error
+	RefreshAndGetOrders(ctx context.Context, userID int64) ([]ordermodels.OrderResponseData, error)
 }

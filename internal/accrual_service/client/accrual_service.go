@@ -2,8 +2,8 @@ package client
 
 import (
 	"encoding/json"
-	"github.com/MaxBoych/gofermart/internal/accrual_service/accrual_service_models"
-	"github.com/MaxBoych/gofermart/internal/order/order_models"
+	"github.com/MaxBoych/gofermart/internal/accrual_service/accrualservicemodels"
+	"github.com/MaxBoych/gofermart/internal/order/ordermodels"
 	"github.com/MaxBoych/gofermart/pkg/consts"
 	"github.com/MaxBoych/gofermart/pkg/errs"
 	"github.com/MaxBoych/gofermart/pkg/logger"
@@ -17,12 +17,12 @@ import (
 
 type AccrualServiceClient struct {
 	AccrualSystemAddress string
-	Queue                chan accrual_service_models.AccrualRequestWithResponse
+	Queue                chan accrualservicemodels.AccrualRequestWithResponse
 }
 
 func NewAccrualServiceClient(
 	accrualSystemAddress string,
-	queue chan accrual_service_models.AccrualRequestWithResponse,
+	queue chan accrualservicemodels.AccrualRequestWithResponse,
 ) *AccrualServiceClient {
 	return &AccrualServiceClient{
 		AccrualSystemAddress: accrualSystemAddress,
@@ -44,7 +44,7 @@ func (c *AccrualServiceClient) Run() {
 	}()
 }
 
-func (c *AccrualServiceClient) SendRequest(order order_models.OrderStorageData) (*http.Response, error) {
+func (c *AccrualServiceClient) SendRequest(order ordermodels.OrderStorageData) (*http.Response, error) {
 	for i := 0; i < 3; i++ {
 		req, err := http.NewRequest(
 			"GET",
@@ -60,7 +60,7 @@ func (c *AccrualServiceClient) SendRequest(order order_models.OrderStorageData) 
 		logger.Log.Info("request data", zap.String("request", string(reqDump)))
 
 		responseChan := make(chan *http.Response)
-		reqWithResp := accrual_service_models.AccrualRequestWithResponse{
+		reqWithResp := accrualservicemodels.AccrualRequestWithResponse{
 			Request:  req,
 			Response: responseChan,
 		}
@@ -81,16 +81,16 @@ func (c *AccrualServiceClient) SendRequest(order order_models.OrderStorageData) 
 			time.Sleep(consts.SleepTime)
 			continue
 		case http.StatusNoContent:
-			return nil, errs.HttpErrOrderNoContent
+			return nil, errs.HTTPErrOrderNoContent
 		default:
-			return nil, errs.HttpErrInternal
+			return nil, errs.HTTPErrInternal
 		}
 	}
 
-	return nil, errs.HttpErrConnectionRefused
+	return nil, errs.HTTPErrConnectionRefused
 }
 
-func (c *AccrualServiceClient) HttpResponseToOrderAccrualResponse(resp *http.Response) (*accrual_service_models.AccrualOrderResponseData, error) {
+func (c *AccrualServiceClient) HTTPResponseToOrderAccrualResponse(resp *http.Response) (*accrualservicemodels.AccrualOrderResponseData, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		logger.Log.Error("Error to read response body", zap.Error(err))
@@ -98,7 +98,7 @@ func (c *AccrualServiceClient) HttpResponseToOrderAccrualResponse(resp *http.Res
 	}
 	logger.Log.Info("Response body content", zap.String("content", string(body)))
 
-	var data accrual_service_models.AccrualOrderResponseData
+	var data accrualservicemodels.AccrualOrderResponseData
 	if err := json.Unmarshal(body, &data); err != nil {
 		logger.Log.Error("Error to do unmarshal response body", zap.Error(err))
 		return nil, err

@@ -14,31 +14,31 @@ func (m *MiddlewareManager) AuthMiddleware() fiber.Handler {
 		key, err := m.tokenRepo.GetSecretKey(ctx.Context())
 		if err != nil {
 			logger.Log.Error("Error to get secret key", zap.Error(err))
-			return errs.HttpErrInternal
+			return errs.HTTPErrInternal
 		}
 
 		tokenValue, err := cookie.GetCookie(ctx, "token")
-		/*if err != nil {
+		if err != nil {
 			logger.Log.Error("Error to get cookie", zap.Error(err))
-			return err
-		}*/
+			//return err
+		}
 
 		// Костыль для тестов. В тестах нет проверок куки, есть только хедеров
 		if tokenValue == "" {
 			tokenValue = ctx.Get("Authorization")
 			if tokenValue == "" {
 				//logger.Log.Error("Authorization Header is empty")
-				return errs.HttpErrCookieIsEmpty
+				return errs.HTTPErrCookieIsEmpty
 			}
 		}
 		//
 
-		userId, err := jwt.ValidateTokenAndGetUserId(tokenValue, key)
+		userID, err := jwt.ValidateTokenAndGetUserID(tokenValue, key)
 		if err != nil {
-			return errs.HttpErrTokenIncorrect
+			return errs.HTTPErrTokenIncorrect
 		}
 
-		ctx.Locals("user_id", userId)
+		ctx.Locals("user_id", userID)
 
 		return ctx.Next()
 	}

@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/MaxBoych/gofermart/internal/accrual_service/accrual_service_models"
+	"github.com/MaxBoych/gofermart/internal/accrual_service/accrualservicemodels"
 	"github.com/MaxBoych/gofermart/internal/accrual_service/client"
 	"github.com/MaxBoych/gofermart/internal/config"
 	"github.com/MaxBoych/gofermart/internal/server"
@@ -33,7 +33,7 @@ func main() {
 		return
 	}
 
-	queue := make(chan accrual_service_models.AccrualRequestWithResponse)
+	queue := make(chan accrualservicemodels.AccrualRequestWithResponse)
 	defer close(queue)
 
 	accrualServiceClient := client.NewAccrualServiceClient(cfg.AccrualSystemAddress, queue)

@@ -2,12 +2,12 @@ package order
 
 import (
 	"context"
-	"github.com/MaxBoych/gofermart/internal/order/order_models"
+	"github.com/MaxBoych/gofermart/internal/order/ordermodels"
 )
 
 type Repository interface {
-	CreateOrder(ctx context.Context, data order_models.OrderStorageData) error
-	GetOrder(ctx context.Context, number string) (*order_models.OrderStorageData, error)
-	GetOrders(ctx context.Context, userId int64) ([]order_models.OrderStorageData, error)
-	UpdateOrder(ctx context.Context, updatedOrder order_models.OrderStorageData) error
+	CreateOrder(ctx context.Context, data ordermodels.OrderStorageData) error
+	GetOrder(ctx context.Context, number string) (*ordermodels.OrderStorageData, error)
+	GetOrders(ctx context.Context, userID int64) ([]ordermodels.OrderStorageData, error)
+	UpdateOrder(ctx context.Context, updatedOrder ordermodels.OrderStorageData) error
 }

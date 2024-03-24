@@ -103,6 +103,7 @@ func (r *BalanceRepo) UpdateBalance(ctx context.Context, req balance_models.Bala
 		logger.Log.Error("Error to build sql UPDATE query", zap.Error(err))
 		return err
 	}
+	logger.Log.Info("UpdateBalance SQL query", zap.String("query", query))
 
 	tr := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	_, err = tr.Exec(ctx, query, args...)

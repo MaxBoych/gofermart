@@ -5,8 +5,10 @@ import (
 	"github.com/MaxBoych/gofermart/internal/balance"
 	"github.com/MaxBoych/gofermart/internal/balance/balance_models"
 	"github.com/MaxBoych/gofermart/pkg/errs"
+	"github.com/MaxBoych/gofermart/pkg/logger"
 	"github.com/MaxBoych/gofermart/pkg/utils"
 	"github.com/avito-tech/go-transaction-manager/trm/v2/manager"
+	"go.uber.org/zap"
 )
 
 type BalanceUC struct {
@@ -57,6 +59,7 @@ func (uc *BalanceUC) Withdraw(ctx context.Context, req balance_models.WithdrawRe
 			Sum:    req.Sum,
 			UserId: req.UserId,
 		}
+		logger.Log.Info("withdraw info", zap.Int64("userID", req.UserId), zap.Float64("sum", req.Sum))
 		return uc.balanceRepo.UpdateBalance(ctx, changeData)
 	})
 }

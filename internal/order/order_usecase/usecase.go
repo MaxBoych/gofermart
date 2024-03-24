@@ -10,9 +10,11 @@ import (
 	"github.com/MaxBoych/gofermart/internal/order"
 	"github.com/MaxBoych/gofermart/internal/order/order_models"
 	"github.com/MaxBoych/gofermart/pkg/errs"
+	"github.com/MaxBoych/gofermart/pkg/logger"
 	"github.com/MaxBoych/gofermart/pkg/utils"
 	"github.com/avito-tech/go-transaction-manager/trm/v2/manager"
 	"github.com/jackc/pgx/v5"
+	"go.uber.org/zap"
 	"sync"
 )
 
@@ -80,6 +82,7 @@ func (uc *OrderUseCase) updateOrder(ctx context.Context, updatedOrder order_mode
 		return nil
 	}
 
+	logger.Log.Info("updatedOrder info", zap.Int64("userID", updatedOrder.UserId), zap.Float64("accrual", *updatedOrder.Accrual))
 	changeData := balance_models.BalanceChangeData{
 		Action: "+",
 		Sum:    *updatedOrder.Accrual,

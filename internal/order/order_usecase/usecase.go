@@ -67,7 +67,7 @@ func (uc *OrderUseCase) UploadNewOrder(ctx context.Context, number string, userI
 }
 
 func (uc *OrderUseCase) updateOrder(ctx context.Context, updatedOrder order_models.OrderStorageData) error {
-	return uc.updateOrder(ctx, updatedOrder)
+	return uc.orderRepo.UpdateOrder(ctx, updatedOrder)
 }
 
 func (uc *OrderUseCase) GetOrders(ctx context.Context, userId int64) ([]order_models.OrderResponseData, error) {

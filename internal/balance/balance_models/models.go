@@ -40,17 +40,17 @@ func (c *BalanceChangeData) IsWithdraw() bool {
 }
 
 type WithdrawStorageData struct {
-	WithdrawId int64   `db:"withdraw_id"`
-	Order      string  `db:"order"`
-	Sum        float64 `db:"sum"`
-	UserId     int64   `db:"user_id"`
-	CreatedAt  int64   `db:"created_at"`
+	WithdrawId int64     `db:"withdraw_id"`
+	Order      string    `db:"order"`
+	Sum        float64   `db:"sum"`
+	UserId     int64     `db:"user_id"`
+	CreatedAt  time.Time `db:"created_at"`
 }
 
 type WithdrawResponseData struct {
 	Order       string  `json:"order"`
 	Sum         float64 `json:"sum"`
-	ProcessedAt int64   `json:"processed_at"`
+	ProcessedAt string  `json:"processed_at"`
 }
 
 func WithdrawStorageToResponse(storageData []WithdrawStorageData) []WithdrawResponseData {
@@ -59,7 +59,7 @@ func WithdrawStorageToResponse(storageData []WithdrawStorageData) []WithdrawResp
 		response[i] = WithdrawResponseData{
 			Order:       storageData[i].Order,
 			Sum:         storageData[i].Sum,
-			ProcessedAt: storageData[i].CreatedAt,
+			ProcessedAt: storageData[i].CreatedAt.Format(time.RFC3339),
 		}
 	}
 	return response

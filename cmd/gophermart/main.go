@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/MaxBoych/gofermart/internal/accrual_service/accrual_service_models"
+	"github.com/MaxBoych/gofermart/internal/accrual_service/client"
 	"github.com/MaxBoych/gofermart/internal/config"
 	"github.com/MaxBoych/gofermart/internal/server"
 	database "github.com/MaxBoych/gofermart/pkg/db"
@@ -31,7 +33,13 @@ func main() {
 		return
 	}
 
-	s := server.NewServer(cfg, db)
+	queue := make(chan accrual_service_models.AccrualRequestWithResponse)
+	defer close(queue)
+
+	accrualServiceClient := client.NewAccrualServiceClient(cfg.AccrualSystemAddress, queue)
+	accrualServiceClient.Run()
+
+	s := server.NewServer(cfg, db, accrualServiceClient)
 	if err := s.Run(); err != nil {
 		logger.Log.Error("Error to start server", zap.Error(err))
 		return

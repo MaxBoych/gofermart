@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/MaxBoych/gofermart/internal/accrual_service/accrual_service_models"
 	"github.com/MaxBoych/gofermart/internal/order/order_models"
-	"github.com/MaxBoych/gofermart/internal/store/consts"
+	"github.com/MaxBoych/gofermart/pkg/consts"
 	"github.com/MaxBoych/gofermart/pkg/errs"
 	"github.com/MaxBoych/gofermart/pkg/logger"
 	"go.uber.org/zap"

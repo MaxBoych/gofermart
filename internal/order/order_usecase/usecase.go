@@ -137,6 +137,7 @@ func (uc *OrderUseCase) RefreshAndGetOrders(ctx context.Context, userId int64) (
 					Number:    oldOrderData.Number,
 					Status:    respData.Status,
 					Accrual:   &respData.Accrual,
+					UserId:    userId,
 					CreatedAt: oldOrderData.CreatedAt,
 				}
 

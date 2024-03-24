@@ -38,6 +38,8 @@ func (h *UserHandler) Register() fiber.Handler {
 			Domain:  ctx.Hostname(),
 		})
 
+		ctx.Set("Authorization", token)
+
 		return ctx.JSON(fiber.Map{
 			"data": "Successfully registered",
 		})
@@ -62,6 +64,8 @@ func (h *UserHandler) Login() fiber.Handler {
 			Expires: time.Now().Add(time.Hour * 72),
 			Domain:  ctx.Hostname(),
 		})
+
+		ctx.Set("Authorization", token)
 
 		return ctx.JSON(fiber.Map{
 			"data": "Successfully logined",

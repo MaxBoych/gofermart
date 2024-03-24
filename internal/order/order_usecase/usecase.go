@@ -83,8 +83,8 @@ func (uc *OrderUseCase) GetOrders(ctx context.Context, userId int64) ([]order_mo
 		Orders: make([]order_models.OrderStorageData, len(orders)),
 	}
 
-	var wg sync.WaitGroup
 	if err = uc.trManager.Do(ctx, func(ctx context.Context) error {
+		var wg sync.WaitGroup
 		for i, oldOrderData := range orders {
 			if oldOrderData.IsFinalStatus() {
 				ordersMutex.Orders[i] = oldOrderData
@@ -125,11 +125,12 @@ func (uc *OrderUseCase) GetOrders(ctx context.Context, userId int64) ([]order_mo
 				ordersMutex.Mutex.Unlock()
 			}(i, oldOrderData)
 		}
+		wg.Wait()
+
 		return nil
 	}); err != nil {
 		return nil, err
 	}
-	wg.Wait()
 
 	response := order_models.OrderStorageToResponse(ordersMutex.Orders)
 

@@ -15,4 +15,5 @@ var (
 	ErrOrderNoContent            = errors.New("this user has no such data")
 	ErrNotEnoughFunds            = errors.New("not enough funds on balance")
 	ErrTooManyRequests           = errors.New("too many requests")
+	ErrConnectionRefused         = errors.New("connection refused")
 )

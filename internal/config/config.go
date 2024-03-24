@@ -16,7 +16,7 @@ func NewConfig() *Config {
 }
 
 func (o *Config) ParseConfig() {
-	flag.StringVar(&o.RunAddr, "a", ":8080", "address and port to run server")
+	flag.StringVar(&o.RunAddr, "a", ":8090", "address and port to run server")
 	flag.StringVar(&o.DatabaseDSN, "d", "postgresql://localhost:54321/gofermart_db", "database address to connect")
 	flag.StringVar(&o.AccrualSystemAddress, "r", "http://localhost:9090", "accrual system address to connect")
 	flag.Parse()

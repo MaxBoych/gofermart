@@ -15,4 +15,5 @@ var (
 	HttpErrOrderNoContent            = fiber.NewError(fiber.StatusNoContent, ErrOrderNoContent.Error())
 	HttpErrNotEnoughFunds            = fiber.NewError(fiber.StatusPaymentRequired, ErrNotEnoughFunds.Error())
 	HttpErrTooManyRequests           = fiber.NewError(fiber.StatusTooManyRequests, fiber.ErrTooManyRequests.Error())
+	HttpErrConnectionRefused         = fiber.NewError(fiber.StatusNotAcceptable, fiber.ErrTooManyRequests.Error())
 )

@@ -9,6 +9,7 @@ import (
 	"github.com/MaxBoych/gofermart/pkg/logger"
 	"go.uber.org/zap"
 	"io"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"time"
@@ -35,6 +36,7 @@ func (c *AccrualServiceClient) Run() {
 			resp, err := http.DefaultClient.Do(reqWithResp.Request)
 			if err != nil {
 				logger.Log.Error("Error to do request to accrual service", zap.Error(err))
+				reqWithResp.Response <- nil
 				continue
 			}
 			reqWithResp.Response <- resp
@@ -43,7 +45,7 @@ func (c *AccrualServiceClient) Run() {
 }
 
 func (c *AccrualServiceClient) SendRequest(order order_models.OrderStorageData) (*http.Response, error) {
-	for {
+	for i := 0; i < 3; i++ {
 		req, err := http.NewRequest(
 			"GET",
 			c.AccrualSystemAddress+"/api/orders/"+order.Number,
@@ -53,7 +55,7 @@ func (c *AccrualServiceClient) SendRequest(order order_models.OrderStorageData) 
 			logger.Log.Error("Error to create http.NewRequest", zap.Error(err))
 			return nil, err
 		}
-		
+
 		reqDump, _ := httputil.DumpRequestOut(req, true)
 		logger.Log.Info("request data", zap.String("request", string(reqDump)))
 
@@ -66,12 +68,16 @@ func (c *AccrualServiceClient) SendRequest(order order_models.OrderStorageData) 
 
 		resp := <-responseChan
 		close(responseChan)
+		if resp == nil {
+			continue
+		}
 		logger.Log.Info("Status for order " + order.Number + " is " + resp.Status)
 
 		switch resp.StatusCode {
 		case http.StatusOK:
 			return resp, nil
 		case http.StatusTooManyRequests:
+			i--
 			time.Sleep(consts.SleepTime)
 			continue
 		case http.StatusNoContent:
@@ -80,6 +86,8 @@ func (c *AccrualServiceClient) SendRequest(order order_models.OrderStorageData) 
 			return nil, errs.HttpErrInternal
 		}
 	}
+
+	return nil, errs.HttpErrConnectionRefused
 }
 
 func (c *AccrualServiceClient) HttpResponseToOrderAccrualResponse(resp *http.Response) (*accrual_service_models.AccrualOrderResponseData, error) {
@@ -97,4 +105,13 @@ func (c *AccrualServiceClient) HttpResponseToOrderAccrualResponse(resp *http.Res
 	}
 
 	return &data, nil
+}
+
+func (c *AccrualServiceClient) CheckConnection() bool {
+	_, err := net.Dial("tcp", c.AccrualSystemAddress)
+	if err != nil {
+		logger.Log.Error("Error to connect to accrual service", zap.Error(err))
+		return false
+	}
+	return true
 }

@@ -27,8 +27,7 @@ func (m *MiddlewareManager) AuthMiddleware() fiber.Handler {
 		if tokenValue == "" {
 			tokenValue = ctx.Get("Authorization")
 			if tokenValue == "" {
-				//logger.Log.Error("Authorization Header is empty")
-				return errs.HTTPErrCookieIsEmpty
+				return errs.HTTPErrUnauthorized
 			}
 		}
 		//

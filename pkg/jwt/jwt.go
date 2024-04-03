@@ -36,7 +36,7 @@ func GenerateTokenValue(userID int64, key string) (string, error) {
 }
 
 func ValidateTokenAndGetUserID(tokenValue string, key string) (int64, error) {
-	token, err := jwt.Parse(tokenValue, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenValue, func(_ *jwt.Token) (interface{}, error) {
 		return []byte(key), nil
 	})
 	if err != nil {

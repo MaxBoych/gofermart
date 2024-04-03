@@ -62,9 +62,9 @@ func (uc *OrderUseCase) UploadNewOrder(ctx context.Context, number string, userI
 		if existedOrder != nil {
 			if newOrder.UserID != existedOrder.UserID {
 				return errs.HTTPErrOrderDuplicateAnotherUser
-			} else {
-				return errs.HTTPErrOrderDuplicateSameUser
 			}
+
+			return errs.HTTPErrOrderDuplicateSameUser
 		}
 
 		return uc.orderRepo.CreateOrder(ctx, newOrder)

@@ -7,7 +7,7 @@ var (
 	ErrUserAlreadyExists         = errors.New("user already exists")
 	ErrUserIncorrectLogin        = errors.New("incorrect login or password")
 	ErrOrderIncorrectNumber      = errors.New("incorrect order number")
-	ErrCookieIsEmpty             = errors.New("cookie is empty")
+	ErrUnauthorized              = errors.New("unauthorized")
 	ErrTokenIncorrect            = errors.New("incorrect token")
 	ErrInternal                  = errors.New("internal server error")
 	ErrOrderDuplicateSameUser    = errors.New("order was already uploaded by this user")

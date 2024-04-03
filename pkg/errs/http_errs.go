@@ -7,7 +7,7 @@ var (
 	HTTPErrUserAlreadyExists         = fiber.NewError(fiber.StatusConflict, ErrUserAlreadyExists.Error())
 	HTTPErrUserIncorrectLogin        = fiber.NewError(fiber.StatusUnauthorized, ErrUserIncorrectLogin.Error())
 	HTTPErrOrderIncorrectNumber      = fiber.NewError(fiber.StatusUnprocessableEntity, ErrOrderIncorrectNumber.Error())
-	HTTPErrCookieIsEmpty             = fiber.NewError(fiber.StatusUnauthorized, ErrCookieIsEmpty.Error())
+	HTTPErrUnauthorized              = fiber.NewError(fiber.StatusUnauthorized, ErrUnauthorized.Error())
 	HTTPErrTokenIncorrect            = fiber.NewError(fiber.StatusUnauthorized, ErrTokenIncorrect.Error())
 	HTTPErrInternal                  = fiber.NewError(fiber.StatusInternalServerError, ErrInternal.Error())
 	HTTPErrOrderDuplicateSameUser    = fiber.NewError(fiber.StatusOK, ErrOrderDuplicateSameUser.Error())

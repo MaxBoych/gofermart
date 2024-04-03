@@ -32,7 +32,7 @@ func NewAccrualServiceClient(
 
 func (c *AccrualServiceClient) Run() {
 	logger.Log.Info("Accrual Service is started", zap.String("address", c.AccrualSystemAddress))
-	
+
 	go func() {
 		for reqWithResp := range c.Queue {
 			resp, err := http.DefaultClient.Do(reqWithResp.Request)
@@ -59,6 +59,9 @@ func (c *AccrualServiceClient) Run() {
 }
 
 func (c *AccrualServiceClient) SendRequest(order ordermodels.OrderStorageData) ([]byte, error) {
+	ticker := time.NewTicker(consts.SleepTime)
+	defer ticker.Stop()
+
 	for i := 0; i < 3; i++ {
 		req, err := http.NewRequest(
 			"GET",
@@ -91,7 +94,8 @@ func (c *AccrualServiceClient) SendRequest(order ordermodels.OrderStorageData) (
 			return resp.Body, nil
 		case http.StatusTooManyRequests:
 			i--
-			time.Sleep(consts.SleepTime)
+			//ticker.Reset(consts.SleepTime)
+			<-ticker.C
 			continue
 		case http.StatusNoContent:
 			return nil, errs.HTTPErrOrderNoContent

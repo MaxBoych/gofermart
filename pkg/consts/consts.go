@@ -3,5 +3,5 @@ package consts
 import "time"
 
 const (
-	SleepTime = 500 * time.Millisecond
+	SleepTime = 1 * time.Second
 )

@@ -28,7 +28,10 @@ func NewBalanceHandler(
 func (h *BalanceHandler) GetBalance() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		ctx.Set("Content-Type", "application/json")
-		userID := ctx.Locals("user_id").(int64)
+		userID, ok := ctx.Locals("user_id").(int64)
+		if !ok {
+			return errs.HTTPErrUnauthorized
+		}
 
 		c := ctx.Context()
 
@@ -54,7 +57,10 @@ func (h *BalanceHandler) GetBalance() fiber.Handler {
 
 func (h *BalanceHandler) Withdraw() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		userID := ctx.Locals("user_id").(int64)
+		userID, ok := ctx.Locals("user_id").(int64)
+		if !ok {
+			return errs.HTTPErrUnauthorized
+		}
 
 		req := balancemodels.WithdrawRequestData{}
 		if err := ctx.BodyParser(&req); err != nil {
@@ -76,7 +82,10 @@ func (h *BalanceHandler) Withdraw() fiber.Handler {
 func (h *BalanceHandler) GetWithdrawals() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		ctx.Set("Content-Type", "application/json")
-		userID := ctx.Locals("user_id").(int64)
+		userID, ok := ctx.Locals("user_id").(int64)
+		if !ok {
+			return errs.HTTPErrUnauthorized
+		}
 
 		withdrawals, err := h.balanceUC.GetWithdrawals(ctx.Context(), userID)
 		if err != nil {

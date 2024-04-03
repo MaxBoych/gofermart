@@ -3,6 +3,7 @@ package orderdelivery
 import (
 	"encoding/json"
 	"github.com/MaxBoych/gofermart/internal/order"
+	"github.com/MaxBoych/gofermart/pkg/errs"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
 )
@@ -20,7 +21,10 @@ func NewOrderHandler(useCase order.UseCase) *OrderHandler {
 func (h *OrderHandler) UploadNewOrder() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		orderNumber := string(ctx.Body())
-		userID := ctx.Locals("user_id").(int64)
+		userID, ok := ctx.Locals("user_id").(int64)
+		if !ok {
+			return errs.HTTPErrUnauthorized
+		}
 
 		if err := h.useCase.UploadNewOrder(ctx.Context(), orderNumber, userID); err != nil {
 			return err
@@ -36,7 +40,10 @@ func (h *OrderHandler) UploadNewOrder() fiber.Handler {
 func (h *OrderHandler) GetOrders() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		ctx.Set("Content-Type", "application/json")
-		userID := ctx.Locals("user_id").(int64)
+		userID, ok := ctx.Locals("user_id").(int64)
+		if !ok {
+			return errs.HTTPErrUnauthorized
+		}
 
 		orders, err := h.useCase.RefreshAndGetOrders(ctx.Context(), userID)
 		if err != nil {
